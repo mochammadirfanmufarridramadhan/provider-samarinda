@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Survey Provider Internet — Mahasiswa Samarinda</title>
+  <meta name="description" content="Dashboard survei pemilihan provider internet seluler terbaik untuk mahasiswa di Samarinda.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+
+  <header class="navbar">
+    <a class="brand" href="#beranda">
+      <span class="wifi-logo">⌁</span>
+      <span><b>Survey Provider Internet</b><small>Mahasiswa Samarinda</small></span>
+    </a>
+    <nav>
+      <a class="active" href="#beranda">Beranda</a>
+      <a href="#statistik">Statistik</a>
+      <a href="#grafik">Grafik</a>
+      <a href="#tentang">Tentang</a>
+      <a href="#formulir">Formulir</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="live-pill"><i></i><span>Data realtime</span><small id="updateTime">menunggu...</small><button id="refreshBtn" title="Perbarui sekarang">↻</button></div>
+      <a class="btn primary" href="#formulir">Isi Kuesioner →</a>
+      <button class="icon-btn" id="themeBtn" title="Mode gelap">☾</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="beranda" class="hero">
+      <div class="hero-copy reveal">
+        <span class="eyebrow">SURVEI MAHASISWA SAMARINDA</span>
+        <h1>Pemilihan Provider Internet Seluler <span>Terbaik</span> untuk Kebutuhan Sehari-hari Mahasiswa di Samarinda</h1>
+        <p>Kami mengajak mahasiswa di Samarinda untuk berpartisipasi. Pendapat Anda membantu menentukan provider terbaik berdasarkan pengalaman penggunaan nyata.</p>
+        <div class="actions">
+          <a class="btn primary large" href="#formulir">▣ &nbsp; Isi Kuesioner Sekarang →</a>
+          <a class="btn outline large" href="#statistik">Lihat Statistik</a>
+        </div>
+        <div class="meta">↗ Link langsung ke Google Form &nbsp; • &nbsp; ◷ Hanya butuh 3–5 menit</div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <div class="city-glow"></div>
+        <div class="bridge"><span></span><span></span><span></span></div>
+        <div class="city">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="river"></div>
+        <div class="phone">
+          <div class="speaker"></div>
+          <div class="phone-screen">
+            <div class="signal">⌁</div>
+            <strong>4G / 5G</strong>
+            <div class="signal-bars"><b></b><b></b><b></b><b></b></div>
+          </div>
+        </div>
+        <div class="provider p-telkomsel">T</div>
+        <div class="provider p-im3">im3</div>
+        <div class="provider p-xl">X</div>
+        <div class="provider p-tri">3</div>
+        <div class="provider p-smart">sf</div>
+        <div class="floating-dot d1"></div><div class="floating-dot d2"></div>
+        <div class="city-label">Samarinda<br><small>Kota Tepian</small></div>
+      </div>
+    </section>
+
+    <section class="quick-grid reveal">
+      <article><span class="round-icon">👥</span><div><b>Siapa yang mengisi?</b><p>Mahasiswa yang berdomisili atau kuliah di Samarinda.</p></div></article>
+      <article><span class="round-icon">⏱</span><div><b>Waktu pengisian</b><p>Sekitar 3–5 menit berdasarkan pengalaman Anda.</p></div></article>
+      <article><span class="round-icon">🔒</span><div><b>Data agregat</b><p>Hasil ditampilkan dalam bentuk statistik, bukan jawaban mentah.</p></div></article>
+      <article><span class="round-icon">🎯</span><div><b>Tujuan survei</b><p>Membandingkan pengalaman dan preferensi provider.</p></div></article>
+    </section>
+
+    <section id="statistik" class="section">
+      <div class="section-heading reveal"><span>LIVE DASHBOARD</span><h2>Statistik Hasil Survei</h2><p>Data diperbarui otomatis dari Google Sheets melalui Google Apps Script.</p></div>
+      <div class="stats-grid">
+        <div class="stat-card reveal"><span class="stat-icon">👥</span><small>Total Responden</small><strong id="totalResponses">—</strong><em id="growth">Data akan muncul setelah API terhubung</em></div>
+        <div class="stat-card reveal"><span class="stat-icon">📶</span><small>Provider Teratas</small><strong id="topProvider">—</strong><em id="topShare">—</em></div>
+        <div class="stat-card reveal"><span class="stat-icon">☺</span><small>Rata-rata Kepuasan</small><strong id="avgSatisfaction">—</strong><em>Skala 1–5</em></div>
+        <div class="stat-card reveal"><span class="stat-icon">📍</span><small>Area Terbanyak</small><strong id="topArea">—</strong><em id="areaShare">—</em></div>
+        <div class="stat-card live-card reveal"><span class="stat-icon">⏱</span><small>Update Otomatis</small><strong>30 detik</strong><em><i></i> Live</em></div>
+      </div>
+    </section>
+
+    <section id="grafik" class="section chart-section">
+      <div class="section-heading reveal"><span>ANALISIS DATA</span><h2>Grafik & Perbandingan</h2><p>Visualisasi membantu melihat kecenderungan hasil survei dengan cepat.</p></div>
+      <div class="chart-grid">
+        <article class="chart-card big reveal"><div class="chart-title"><div><h3>Perbandingan Provider</h3><p>Jumlah responden berdasarkan provider terbaik</p></div><span>Live</span></div><canvas id="providerChart"></canvas></article>
+        <article class="chart-card reveal"><div class="chart-title"><div><h3>Distribusi Kepuasan</h3><p>Penilaian keseluruhan</p></div></div><canvas id="satisfactionChart"></canvas></article>
+        <article class="chart-card big reveal"><div class="chart-title"><div><h3>Rata-rata Penilaian Aspek</h3><p>Skala 1–5</p></div></div><canvas id="aspectChart"></canvas></article>
+        <article class="chart-card reveal"><div class="chart-title"><div><h3>Distribusi Penggunaan</h3><p>Provider yang paling sering digunakan</p></div></div><canvas id="usedProviderChart"></canvas></article>
+      </div>
+    </section>
+
+    <section class="section winner-section">
+      <div class="winner-card reveal">
+        <div class="trophy">🏆</div>
+        <div><span>PROVIDER TERBAIK SAAT INI</span><h2 id="winnerName">Menunggu data survei...</h2><p id="winnerText">Isi kuesioner untuk ikut menentukan hasil.</p></div>
+        <a class="btn primary" href="#formulir">Lihat & Ikut Menilai →</a>
+      </div>
+    </section>
+
+    <section id="tentang" class="section">
+      <div class="section-heading reveal"><span>TENTANG</span><h2>Tentang Kuesioner</h2><p>Survei ini dibuat untuk tugas mata kuliah Desain Pembelajaran Berbasis Teknologi.</p></div>
+      <div class="about-grid">
+        <article class="about-card reveal">
+          <h3>📱 Apa yang dinilai?</h3>
+          <p>Responden menilai provider berdasarkan kualitas jaringan, kecepatan internet, kestabilan koneksi, jangkauan jaringan di Samarinda, harga dan pilihan paket, kemudahan pembelian, promo, serta pelayanan pelanggan.</p>
+          <div class="chips"><span>✓ Jaringan</span><span>✓ Kecepatan</span><span>✓ Stabilitas</span><span>✓ Jangkauan</span><span>✓ Harga</span><span>✓ Paket</span><span>✓ Promo</span><span>✓ Pelayanan</span></div>
+        </article>
+        <article class="about-card reveal">
+          <h3>🔄 Bagaimana data diperbarui?</h3>
+          <div class="flow"><b>Google Form</b><i>→</i><b>Google Sheets</b><i>→</i><b>Apps Script</b><i>→</i><b>Dashboard</b></div>
+          <p class="muted">Dashboard mengecek data terbaru secara otomatis setiap 30 detik. Yang dikirim ke website hanyalah statistik agregat.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="formulir" class="section form-section">
+      <div class="section-heading reveal"><span>KUESIONER</span><h2>Ikut Berpartisipasi</h2><p>Jawabanmu membantu kelompok kami memperoleh data yang lebih representatif.</p></div>
+      <div class="form-wrap reveal">
+        <div class="form-placeholder">
+          <div class="form-icon">▣</div>
+          <h3>Google Form Kuesioner</h3>
+          <p>Formulir dibuka di tab baru agar pengisian lebih nyaman dan tetap tersinkron dengan Google Sheets.</p>
+          <a id="formLink" class="btn primary large" target="_blank" rel="noopener">Buka Google Form ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div><b>⌁ Survey Provider Internet</b><small>Mahasiswa Samarinda</small></div>
+    <p>“Bersama kita wujudkan koneksi yang lebih baik!”</p>
+    <div>Kelompok: <b>Irfan · Rivaldi · Maldi</b></div>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
