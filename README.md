@@ -24,6 +24,8 @@ GitHub Pages hanya menjalankan file statis dan tidak dapat menjalankan PHP. Vers
 5. Pastikan `config.php` memakai user/password MySQL milikmu.
 6. Buka `http://localhost/provider-samarinda/`.
 
+Untuk mengisi database dengan data yang sudah ada: di Google Sheet pilih **File → Download → Comma-separated values (.csv)**, lalu buka `http://localhost/provider-samarinda/import.php` dan upload file CSV tersebut. Setelah import berhasil, refresh dashboard.
+
 `api.php` membaca statistik dari tabel `survey_responses` setiap kali dashboard meminta data. `sync.php` menerima data JSON dari Google Apps Script dan melakukan upsert, sehingga data tidak dobel.
 
 ## 5. Hubungkan Google Form ke database PHP
