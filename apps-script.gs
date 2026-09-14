@@ -3,7 +3,7 @@
 // Jangan kirim data mentah responden ke website publik.
 
 const SPREADSHEET_ID = "1DEBtfIV1bapk4Mark2OQrQOapjLMUboMCfh5qmPWifg";
-const SHEET_NAME = "Form Responses 1";
+const SHEET_NAME = "Form responses 1";
 
 const ASPECTS = [
   "Kualitas jaringan",
