@@ -13,7 +13,30 @@ https://forms.gle/r3HF7A4okbH2rdPX6
 Spreadsheet ID sudah dipasang di `apps-script.gs`:
 1DEBtfIV1bapk4Mark2OQrQOapjLMUboMCfh5qmPWifg
 
-## 4. Hubungkan statistik dan sinkronisasi
+## 4. Versi database PHP/MySQL
+
+GitHub Pages hanya menjalankan file statis dan tidak dapat menjalankan PHP. Versi database baru memakai PHP + MySQL, sehingga dijalankan melalui XAMPP atau hosting PHP.
+
+1. Jalankan Apache dan MySQL di XAMPP.
+2. Salin folder ini ke `C:\xampp\htdocs\provider-samarinda`.
+3. Buka phpMyAdmin di `http://localhost/phpmyadmin`.
+4. Import file `database.sql`.
+5. Pastikan `config.php` memakai user/password MySQL milikmu.
+6. Buka `http://localhost/provider-samarinda/`.
+
+`api.php` membaca statistik dari tabel `survey_responses` setiap kali dashboard meminta data. `sync.php` menerima data JSON dari Google Apps Script dan melakukan upsert, sehingga data tidak dobel.
+
+## 5. Hubungkan Google Form ke database PHP
+
+Google Form tetap menyimpan respons ke Google Sheets. Untuk mengirim salinan respons ke MySQL, isi URL hosting PHP dan secret pada Apps Script, lalu buat trigger `From spreadsheet` → `On form submit` yang memanggil fungsi sinkronisasi. Jangan gunakan password database di Apps Script; hanya gunakan secret sinkronisasi.
+
+Versi Apps Script yang sekarang tetap dapat membaca statistik dari Sheet. Untuk versi PHP, endpoint sinkronisasi harus diarahkan ke URL publik `sync.php` setelah hosting PHP tersedia.
+
+## 6. Publikasi
+
+GitHub Pages tidak cocok untuk versi PHP. Upload seluruh folder ke hosting yang mendukung PHP 8+, MySQL/MariaDB, HTTPS, dan cron/trigger jika dibutuhkan. Setelah mendapat domain, ubah `STATS_API_URL` di `config.js` menjadi URL `api.php` di hosting tersebut.
+
+## 7. Hubungkan statistik Google Apps Script (versi lama)
 1. Buka Google Sheet respons.
 2. Extensions → Apps Script.
 3. Tempel isi `apps-script.gs`.
@@ -31,7 +54,7 @@ Google Sheets menjadi database utama. Alurnya adalah Google Form → Google Shee
 
 Setiap kali kode `apps-script.gs` berubah, tempel perubahan tersebut ke Apps Script lalu buat deployment versi baru. Jika URL deployment tetap sama, dashboard akan langsung memakai kode terbaru setelah deployment selesai.
 
-## 5. Publikasikan agar bisa diakses semua orang
+## 8. Publikasikan versi statis lama
 1. Buat repository baru di GitHub, misalnya `provider-samarinda`.
 2. Upload semua file website.
 3. Repository → Settings → Pages.
@@ -40,7 +63,7 @@ Setiap kali kode `apps-script.gs` berubah, tempel perubahan tersebut ke Apps Scr
 6. Save.
 7. GitHub akan memberikan URL publik.
 
-## 6. Fitur website
+## 9. Fitur website
 - desain biru-putih modern
 - tema Samarinda tanpa gambar eksternal
 - animasi scroll reveal

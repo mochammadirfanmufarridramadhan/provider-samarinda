@@ -4,6 +4,8 @@
 
 const SPREADSHEET_ID = "1DEBtfIV1bapk4Mark2OQrQOapjLMUboMCfh5qmPWifg";
 const SHEET_NAME = "Form responses 1";
+const PHP_SYNC_URL = "PASTE_PUBLIC_URL_SYNC_PHP_DI_SINI";
+const PHP_SYNC_SECRET = "GANTI_SECRET_YANG_SAMA_DENGAN_CONFIG_PHP";
 
 const ASPECTS = [
   "Kualitas jaringan",
@@ -77,6 +79,21 @@ function doGet(){
     topArea:topA,
     areaShare:topA?Math.round((area[topA]/rows.length)*1000)/10:0
   });
+}
+
+function syncAllResponses(){
+  if(PHP_SYNC_URL.startsWith("PASTE_")) throw new Error("PHP_SYNC_URL belum diisi.");
+  const sh=SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+  if(!sh) throw new Error("Sheet '"+SHEET_NAME+"' tidak ditemukan.");
+  const values=sh.getDataRange().getValues();
+  if(values.length<2) return;
+  const headers=values[0].map(String);
+  const responses=values.slice(1).filter(row=>row.some(value=>String(value).trim()!=="")).map(row=>{
+    const item={};
+    headers.forEach((header,index)=>item[header]=row[index]);
+    return item;
+  });
+  UrlFetchApp.fetch(PHP_SYNC_URL,{method:"post",contentType:"application/json",headers:{"X-Sync-Secret":PHP_SYNC_SECRET},payload:JSON.stringify({responses:responses}),muteHttpExceptions:false});
 }
 
 function countCol(rows,index){
