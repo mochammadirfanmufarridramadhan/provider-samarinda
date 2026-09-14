@@ -44,7 +44,7 @@ function draw(data){
   $("winnerText").textContent = data.topProvider
     ? `Saat ini menjadi pilihan teratas berdasarkan ${data.totalResponses || 0} responden.`
     : "Isi kuesioner untuk ikut menentukan hasil.";
-  $("growth").textContent = data.source === "google-sheets" ? "Live dari Google Sheets" : "Live dari database MySQL";
+  $("growth").textContent = "Live dari Google Sheets";
   const updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
   const validUpdatedAt = !Number.isNaN(updatedAt.getTime());
   $("updateTime").textContent = validUpdatedAt
@@ -83,10 +83,8 @@ function draw(data){
 }
 
 async function loadStats(){
-  const urls=[
-    {url:CONFIG.STATS_API_URL,source:"mysql"},
-    {url:CONFIG.FALLBACK_STATS_API_URL,source:"google-sheets"}
-  ].filter(item=>item.url&&!item.url.startsWith("PASTE_"));
+  const urls=[{url:CONFIG.STATS_API_URL,source:"google-sheets"}]
+    .filter(item=>item.url&&!item.url.startsWith("PASTE_"));
   const results=await Promise.allSettled(urls.map(async item=>{
     const join=item.url.includes("?")?"&":"?";
     const res=await fetch(item.url+join+"t="+Date.now(),{cache:"no-store"});
