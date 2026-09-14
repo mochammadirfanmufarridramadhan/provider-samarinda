@@ -87,7 +87,10 @@ async function loadStats(){
     .filter(item=>item.url&&!item.url.startsWith("PASTE_"));
   const results=await Promise.allSettled(urls.map(async item=>{
     const join=item.url.includes("?")?"&":"?";
-    const res=await fetch(item.url+join+"t="+Date.now(),{cache:"no-store"});
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),8000);
+    const res=await fetch(item.url+join+"t="+Date.now(),{cache:"no-store",signal:controller.signal});
+    clearTimeout(timeout);
     if(!res.ok) throw new Error(item.source+" HTTP "+res.status);
     const data=await res.json();
     if(data.error) throw new Error(data.error);
