@@ -83,26 +83,38 @@ function draw(data){
 }
 
 async function loadStats(){
-  const urls=[{url:CONFIG.STATS_API_URL,source:"google-sheets"}]
-    .filter(item=>item.url&&!item.url.startsWith("PASTE_"));
-  const results=await Promise.allSettled(urls.map(async item=>{
-    const join=item.url.includes("?")?"&":"?";
-    const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),8000);
-    const res=await fetch(item.url+join+"t="+Date.now(),{cache:"no-store",signal:controller.signal});
-    clearTimeout(timeout);
-    if(!res.ok) throw new Error(item.source+" HTTP "+res.status);
-    const data=await res.json();
-    if(data.error) throw new Error(data.error);
-    return {...data,source:item.source};
-  }));
-  const valid=results.filter(result=>result.status==="fulfilled").map(result=>result.value);
-  if(!valid.length){
-    $("updateTime").textContent="Gagal menyinkronkan data";
-    return;
+  if(!CONFIG.STATS_API_URL||CONFIG.STATS_API_URL.startsWith("PASTE_")) return;
+  const join=CONFIG.STATS_API_URL.includes("?")?"&":"?";
+  let lastError;
+  for(let attempt=0;attempt<3;attempt++){
+    try{
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),12000);
+      const res=await fetch(CONFIG.STATS_API_URL+join+"t="+Date.now(),{cache:"no-store",signal:controller.signal});
+      clearTimeout(timeout);
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      const data=await res.json();
+      if(data.error) throw new Error(data.error);
+      data.source="google-sheets";
+      localStorage.setItem("surveyStats",JSON.stringify(data));
+      draw(data);
+      return;
+    }catch(error){
+      lastError=error;
+      await new Promise(resolve=>setTimeout(resolve,800*(attempt+1)));
+    }
   }
-  valid.sort((a,b)=>new Date(b.updatedAt||0)-new Date(a.updatedAt||0));
-  draw(valid[0]);
+  const cached=localStorage.getItem("surveyStats");
+  if(cached){
+    try{
+      const data=JSON.parse(cached);
+      draw(data);
+      $("growth").textContent="Data terakhir, mencoba sinkronisasi";
+      return;
+    }catch(error){ lastError=error; }
+  }
+  console.error(lastError);
+  $("updateTime").textContent="Menunggu koneksi data";
 }
 
 const observer=new IntersectionObserver(entries=>{

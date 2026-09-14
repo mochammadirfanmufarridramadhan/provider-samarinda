@@ -20,8 +20,9 @@ const ASPECTS = [
 ];
 
 function doGet(){
+  try{
   const ss=SpreadsheetApp.openById(SPREADSHEET_ID);
-  const sh=ss.getSheetByName(SHEET_NAME);
+  const sh=ss.getSheets().find(sheet=>sheet.getName().toLowerCase()===SHEET_NAME.toLowerCase());
   if(!sh) return out({error:"Sheet '"+SHEET_NAME+"' tidak ditemukan."});
 
   const all=sh.getDataRange().getValues();
@@ -79,6 +80,9 @@ function doGet(){
     topArea:topA,
     areaShare:topA?Math.round((area[topA]/rows.length)*1000)/10:0
   });
+  }catch(error){
+    return out({error:"Gagal membaca Google Sheets: "+error.message});
+  }
 }
 
 function syncAllResponses(){
